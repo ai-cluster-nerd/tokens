@@ -22,5 +22,7 @@ class Config:
 
         # Keys, etc
         self.s3_parameters_key = 's3_parameters.yaml'
-
         self.prefix = 'data/raw'
+
+        # For arguments JSON
+        self.checkpoint = 'google-t5/t5-small'
