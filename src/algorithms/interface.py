@@ -3,8 +3,13 @@ import transformers
 
 import config
 
+import src.data.interface
+
 
 class Interface:
+    """
+
+    """
 
     def __init__(self):
 
