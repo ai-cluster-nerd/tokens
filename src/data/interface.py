@@ -1,11 +1,10 @@
-import logging
 import typing
 
 import datasets
 
 import config
-import src.elements.s3_parameters as s3p
 import src.elements.master as mr
+import src.elements.s3_parameters as s3p
 
 
 class Interface:
