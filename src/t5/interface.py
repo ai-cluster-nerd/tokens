@@ -4,7 +4,6 @@ import datasets
 import transformers
 
 import config
-
 import src.elements.master as mr
 import src.elements.s3_parameters as s3p
 import src.t5.mappings
@@ -26,6 +25,7 @@ class Interface:
 
         # Configurations
         self.__configurations = config.Config()
+        self.__prefix = self.__configurations.destination + '/' + 'T5'
 
         # Logging
         logging.basicConfig(level=logging.INFO,
@@ -40,10 +40,10 @@ class Interface:
         :return:
         """
 
-        dataset_dict_path = 's3://' + self.__s3_parameters.internal + '/' + self.__configurations.destination
+        dataset_dict_path = 's3://' + self.__s3_parameters.internal + '/' + self.__prefix
         packets.save_to_disk(dataset_dict_path=dataset_dict_path)
 
-        self.__logger.info('The data tokens for T5: %s', dataset_dict_path)
+        self.__logger.info('The data tokens for T5 have been written to prefix: %s', self.__prefix)
 
     def exc(self, master: mr.Master):
         """
