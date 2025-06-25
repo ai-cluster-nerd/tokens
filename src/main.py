@@ -18,6 +18,7 @@ def main():
 
     # Get data & labels
     master: mr.Master = src.data.interface.Interface(s3_parameters=s3_parameters).exc()
+    logger.info(master)
 
     # Tokenize
     src.t5.interface.Interface(s3_parameters=s3_parameters).exc(master=master)
