@@ -1,15 +1,16 @@
-
+import logging
 import transformers
 
 import config
 
+import src.elements.master as mr
 import src.elements.s3_parameters as s3p
-import datasets
+import src.t5.mappings
 
 
 class Interface:
     """
-
+    The interface to the T5 data tokenization steps
     """
 
     def __init__(self, s3_parameters: s3p):
@@ -21,17 +22,32 @@ class Interface:
 
         self.__s3_parameters = s3_parameters
 
+        # Configurations
         self.__configurations = config.Config()
 
-    def exc(self, data: datasets.DatasetDict):
+        # Logging
+        logging.basicConfig(level=logging.INFO,
+                            format='\n\n%(message)s\n%(asctime)s.%(msecs)03d\n',
+                            datefmt='%Y-%m-%d %H:%M:%S')
+        self.__logger = logging.getLogger(__name__)
+
+    def exc(self, master: mr.Master):
         """
 
-        :param data: A DatasetDict of training (train), validation, and testing (test) data
+        :param master: The labels, and a DatasetDict of training (train), validation, and testing (test) data.
         :return:
         """
-
 
         # The tokenizer, vis-à-vis pre-trained architecture
         tokenizer = transformers.AutoTokenizer.from_pretrained(
             pretrained_model_name_or_path=self.__configurations.checkpoint)
 
+        # Tokenization
+        mappings = src.t5.mappings.Mappings(tokenizer=tokenizer, _id2label=master.id2label)
+        packets = master.data.map(mappings.exc, batched=True)
+        self.__logger.info(packets)
+
+        # Persist
+        dataset_dict_path = 's3://' + self.__s3_parameters.internal + '/' + self.__configurations.destination
+        self.__logger.info(dataset_dict_path)
+        packets.save_to_disk(dataset_dict_path=dataset_dict_path)
