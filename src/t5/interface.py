@@ -1,4 +1,6 @@
 import logging
+
+import datasets
 import transformers
 
 import config
@@ -31,6 +33,18 @@ class Interface:
                             datefmt='%Y-%m-%d %H:%M:%S')
         self.__logger = logging.getLogger(__name__)
 
+    def __persist(self, packets: datasets.DatasetDict):
+        """
+
+        :param packets:
+        :return:
+        """
+
+        dataset_dict_path = 's3://' + self.__s3_parameters.internal + '/' + self.__configurations.destination
+        packets.save_to_disk(dataset_dict_path=dataset_dict_path)
+
+        self.__logger.info('The data tokens for T5: %s', dataset_dict_path)
+
     def exc(self, master: mr.Master):
         """
 
@@ -44,10 +58,12 @@ class Interface:
 
         # Tokenization
         mappings = src.t5.mappings.Mappings(tokenizer=tokenizer, _id2label=master.id2label)
-        packets = master.data.map(mappings.exc, batched=True)
+
+        try:
+            packets = master.data.map(mappings.exc, batched=True)
+        except RuntimeError as err:
+            raise err from err
+
         self.__logger.info(packets)
 
-        # Persist
-        dataset_dict_path = 's3://' + self.__s3_parameters.internal + '/' + self.__configurations.destination
-        self.__logger.info(dataset_dict_path)
-        packets.save_to_disk(dataset_dict_path=dataset_dict_path)
+        self.__persist(packets=packets)
