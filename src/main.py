@@ -18,6 +18,8 @@ def main():
 
     master: mr.Master = src.data.interface.Interface(s3_parameters=s3_parameters).exc()
 
+    src.t5.interface.Interface(s3_parameters=s3_parameters).exc(master=master)
+
 
 if __name__ == '__main__':
 
@@ -38,6 +40,7 @@ if __name__ == '__main__':
     import src.elements.service as sr
     import src.functions.cache
     import src.preface.interface
+    import src.t5.interface
 
     connector: boto3.session.Session
     s3_parameters: s3p
