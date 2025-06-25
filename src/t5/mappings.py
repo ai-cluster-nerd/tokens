@@ -37,12 +37,13 @@ class Mappings:
         """
 
         :param tags: The corresponding tag codes of packets.
-        :param packets: Each batch index denotes the location of a list of strings/words that make-up a sentence; a location amongst a list of lists.
+        :param packets: Each batch index denotes the location of a list of strings/words that
+                        make-up a sentence; a location amongst a list of lists.
         :return:
         """
 
-        vectors = [list(map(lambda x: int(tags[i][x]) if x is not None else int(-100), packets.word_ids(batch_index=i)))
-                   for i in np.arange(len(tags))]
+        vectors = [list(map(lambda x: int(tags[step][x]) if x is not None else int(-100), packets.word_ids(batch_index=step)))
+                   for step in np.arange(len(tags))]
 
         return torch.tensor(vectors, dtype=torch.int)
 
