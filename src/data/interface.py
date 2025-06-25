@@ -22,7 +22,7 @@ class Interface:
         self.__configurations = config.Config()
 
         # The data
-        dataset_path = 's3://' + self.__s3_parameters.internal + '/' + self.__configurations.prefix
+        dataset_path = 's3://' + self.__s3_parameters.internal + '/' + self.__configurations.source
         self.__data =  datasets.load_from_disk(dataset_path=dataset_path)
 
     def tags(self) -> typing.Tuple[dict, dict]:
