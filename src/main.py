@@ -8,7 +8,7 @@ import boto3
 
 def main():
     """
-    Entry po
+    Entry Point
 
     :return:
     """
@@ -16,9 +16,14 @@ def main():
     logger: logging.Logger = logging.getLogger(__name__)
     logger.info('Starting: %s', datetime.datetime.now().isoformat(timespec='microseconds'))
 
+    # Get data & labels
     master: mr.Master = src.data.interface.Interface(s3_parameters=s3_parameters).exc()
 
+    # Tokenize
     src.t5.interface.Interface(s3_parameters=s3_parameters).exc(master=master)
+
+    # Delete Cache
+    src.functions.cache.Cache().exc()
 
 
 if __name__ == '__main__':
