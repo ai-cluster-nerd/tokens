@@ -1,3 +1,4 @@
+"""Module mappings.py"""
 import transformers
 
 import datasets
@@ -6,6 +7,9 @@ import torch
 
 
 class Mappings:
+    """
+    Computes tokens according to the expectations of the T5 architecture
+    """
 
     def __init__(self, tokenizer: transformers.models.t5.tokenization_t5_fast.T5TokenizerFast, _id2label) -> None:
         """
