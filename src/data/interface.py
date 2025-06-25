@@ -1,3 +1,4 @@
+"""Module interface.py"""
 import typing
 
 import datasets
@@ -8,6 +9,9 @@ import src.elements.s3_parameters as s3p
 
 
 class Interface:
+    """
+    Reads the raw data.
+    """
 
     def __init__(self, s3_parameters: s3p):
         """
@@ -40,6 +44,10 @@ class Interface:
         return id2label, label2id
 
     def exc(self) -> mr.Master:
+        """
+
+        :return:
+        """
 
         id2label, label2id = self.__tags()
 
