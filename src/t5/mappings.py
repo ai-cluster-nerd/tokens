@@ -33,7 +33,19 @@ class Mappings:
         return list(map(lambda y: self.__id2label[y], _targets))
 
     @staticmethod
-    def bijective(tags: list[list[int]], packets: transformers.tokenization_utils_base.BatchEncoding) -> torch.Tensor:
+    def __surjective(_tags: list, _packets: list) -> list:
+        """
+
+        :param _tags: Used to get the tag associated with a token
+        :param _packets: A padded list of a sentence's strings/words position identifiers per token
+        :return:
+        """
+
+        _surjective = list(map(lambda x: int(_tags[x]) if x is not None else int(-100), _packets))
+
+        return _surjective
+
+    def bijective(self, tags: list[list[int]], packets: transformers.tokenization_utils_base.BatchEncoding) -> torch.Tensor:
         """
 
         :param tags: The corresponding tag codes of packets.
@@ -42,10 +54,14 @@ class Mappings:
         :return:
         """
 
-        vectors = [list(map(lambda x: int(tags[step][x]) if x is not None else int(-100), packets.word_ids(batch_index=step)))
-                   for step in np.arange(len(tags))]
+        indices = np.arange(len(tags))
 
-        return torch.tensor(vectors, dtype=torch.int)
+        vectors = list(
+            map(lambda i: self.__surjective(tags[i], packets.word_ids(batch_index=i)),
+                indices)
+        )
+
+        return torch.tensor(vectors, dtype=torch.int64)
 
     def exc(self, feeds: datasets.arrow_dataset.Dataset) -> transformers.tokenization_utils_base.BatchEncoding:
         """
