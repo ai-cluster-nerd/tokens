@@ -4,7 +4,6 @@ import logging
 import datasets
 import transformers
 
-import config
 import src.elements.master as mr
 import src.elements.s3_parameters as s3p
 import src.t5.mappings
@@ -26,8 +25,7 @@ class Interface:
         self.__s3_parameters = s3_parameters
         self.__arguments = arguments
 
-        # Configurations
-        self.__configurations = config.Config()
+        # Prefix
         self.__prefix = self.__arguments.get('destination') + '/' + 'T5'
 
         # Logging
