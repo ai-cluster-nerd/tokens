@@ -4,6 +4,7 @@ import typing
 
 import boto3
 
+import config
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
 import src.functions.cache
@@ -19,10 +20,23 @@ class Interface:
     """
 
     def __init__(self):
-        pass
+        """
+        Constructor
+        """
 
-    @staticmethod
-    def exc() -> typing.Tuple[boto3.session.Session, s3p.S3Parameters, sr.Service]:
+        self.__configurations = config.Config()
+
+    def __arguments(self, connector: boto3.session.Session) -> dict:
+        """
+
+        :param connector:
+        :return:
+        """
+
+        return src.s3.configurations.Configurations(connector=connector).objects(
+            key_name=self.__configurations.arguments_key)
+
+    def exc(self) -> typing.Tuple[boto3.session.Session, s3p.S3Parameters, sr.Service, dict]:
         """
 
         :return:
@@ -34,7 +48,9 @@ class Interface:
         service: sr.Service = src.functions.service.Service(
             connector=connector, region_name=s3_parameters.region_name).exc()
 
-        # Setting up the cloud storage area
-        src.preface.setup.Setup(service=service, s3_parameters=s3_parameters).exc()
+        arguments = self.__arguments(connector=connector)
 
-        return connector, s3_parameters, service
+        # Setting up the cloud storage area
+        src.preface.setup.Setup(service=service, s3_parameters=s3_parameters, arguments=arguments).exc()
+
+        return connector, s3_parameters, service, arguments

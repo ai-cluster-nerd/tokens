@@ -18,7 +18,7 @@ def main():
     logger.info('Starting: %s', datetime.datetime.now().isoformat(timespec='microseconds'))
 
     # Get data & labels
-    master: mr.Master = src.data.interface.Interface(s3_parameters=s3_parameters).exc()
+    master: mr.Master = src.data.interface.Interface(s3_parameters=s3_parameters, arguments=arguments).exc()
     logger.info(master)
 
     # Tokenize
@@ -52,6 +52,7 @@ if __name__ == '__main__':
     connector: boto3.session.Session
     s3_parameters: s3p
     service: sr.Service
-    connector, s3_parameters, service = src.preface.interface.Interface().exc()
+    arguments: dict
+    connector, s3_parameters, service, arguments = src.preface.interface.Interface().exc()
 
     main()

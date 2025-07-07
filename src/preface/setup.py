@@ -1,7 +1,6 @@
 """Module setup.py"""
 import sys
 
-import config
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
 import src.functions.cache
@@ -19,20 +18,21 @@ class Setup:
     Sets up local & cloud environments
     """
 
-    def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters):
+    def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters, arguments: dict):
         """
 
         :param service: A suite of services for interacting with Amazon Web Services.
         :param s3_parameters: The overarching S3 parameters settings of this project, e.g., region code
                               name, buckets, etc.
+        :param arguments: https://github.com/prehypotheses/configurations/blob/master/data/tokens/arguments.json
         """
 
         self.__service: sr.Service = service
         self.__s3_parameters: s3p.S3Parameters = s3_parameters
         self.__bucket_name = self.__s3_parameters.internal
 
-        # Configurations, etc.
-        self.__destination = config.Config().destination
+        # Destination of tokens
+        self.__destination = arguments.get('destination')
 
     def __clear_prefix(self) -> bool:
         """
