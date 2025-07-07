@@ -51,6 +51,6 @@ class Interface:
         arguments = self.__arguments(connector=connector)
 
         # Setting up the cloud storage area
-        src.preface.setup.Setup(service=service, s3_parameters=s3_parameters).exc()
+        src.preface.setup.Setup(service=service, s3_parameters=s3_parameters, arguments=arguments).exc()
 
         return connector, s3_parameters, service, arguments
