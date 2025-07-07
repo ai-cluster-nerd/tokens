@@ -15,18 +15,20 @@ class Interface:
     The interface to the T5 data tokenization steps
     """
 
-    def __init__(self, s3_parameters: s3p):
+    def __init__(self, s3_parameters: s3p, arguments: dict):
         """
 
         :param s3_parameters: The overarching S3 parameters settings of this
                               project, e.g., region code name, buckets, etc.<br>
+        :param arguments: https://github.com/prehypotheses/configurations/blob/master/data/tokens/arguments.json
         """
 
         self.__s3_parameters = s3_parameters
+        self.__arguments = arguments
 
         # Configurations
         self.__configurations = config.Config()
-        self.__prefix = self.__configurations.destination + '/' + 'T5'
+        self.__prefix = self.__arguments.get('destination') + '/' + 'T5'
 
         # Logging
         logging.basicConfig(level=logging.INFO,
@@ -55,7 +57,7 @@ class Interface:
 
         # The tokenizer, vis-à-vis pre-trained architecture
         tokenizer = transformers.AutoTokenizer.from_pretrained(
-            pretrained_model_name_or_path=self.__configurations.checkpoint)
+            pretrained_model_name_or_path=self.__arguments.get('pretrained_model_name'))
 
         # Tokenization
         mappings = src.t5.mappings.Mappings(tokenizer=tokenizer, _id2label=master.id2label)
