@@ -3,7 +3,6 @@ import typing
 
 import datasets
 
-import config
 import src.elements.master as mr
 import src.elements.s3_parameters as s3p
 
@@ -22,9 +21,6 @@ class Interface:
         """
 
         self.__s3_parameters: s3p.S3Parameters = s3_parameters
-
-        # Configurations
-        self.__configurations = config.Config()
 
         # The data
         dataset_path = 's3://' + self.__s3_parameters.internal + '/' + arguments.get('source')
