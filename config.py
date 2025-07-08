@@ -22,4 +22,4 @@ class Config:
 
         # Keys, etc
         self.s3_parameters_key = 's3_parameters.yaml'
-        self.arguments_key = 'special/arguments.json'
+        self.arguments_key = 'tokens/arguments.json'
