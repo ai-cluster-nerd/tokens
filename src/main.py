@@ -22,7 +22,7 @@ def main():
     logger.info(master)
 
     # Tokenize
-    src.t5.interface.Interface(s3_parameters=s3_parameters).exc(master=master)
+    src.t5.interface.Interface(s3_parameters=s3_parameters, arguments=arguments).exc(master=master)
 
     # Delete Cache
     src.functions.cache.Cache().exc()
